@@ -328,10 +328,11 @@ public class TelaInicialCliente extends javax.swing.JFrame {
 
     private void DownloadMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DownloadMouseClicked
         String download = this.arquivoParaDownloadField.getText();
-        if(!download.equals(""))
+        if(!download.equals("") && !listaDeArquivos.contains(download))
         {    
             try {
                 byte[] arq = servidor.fazerDownload(download, cliente);
+                for(int i=0 ; i<10000000 ; i++){}
                 if(arq == null)
                 {
                     PopUpInteresse regInteresse = new PopUpInteresse(download, cliente, servidor, listaDeInteresses);                        
@@ -340,7 +341,12 @@ public class TelaInicialCliente extends javax.swing.JFrame {
                     FileOutputStream fileOS = new FileOutputStream(file.getName()+"\\"+download);
                     fileOS.write(arq);
                     fileOS.close();
-                    this.atualizaListaCliente(); 
+                    this.atualizaListaCliente();
+                    if(listaDeInteresses.contains(download)){
+                        listaDeInteresses.remove(download);
+                        atualizaListaInteresses();
+                        servidor.cancelarInteresse(download, cliente);
+                    }
                 }
             } catch (RemoteException ex) {
                 Logger.getLogger(TelaInicialCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -361,6 +367,11 @@ public class TelaInicialCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_listaArquivosServidorMouseClicked
 
     private void removerInteresseButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removerInteresseButtonMouseClicked
+        try {
+            servidor.cancelarInteresse(listaDeInteressesPainel.getSelectedValue(), cliente);
+        } catch (RemoteException ex) {
+            Logger.getLogger(TelaInicialCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
         listaDeInteresses.remove(listaDeInteressesPainel.getSelectedValue());
         atualizaListaInteresses();
     }//GEN-LAST:event_removerInteresseButtonMouseClicked

@@ -1,5 +1,6 @@
 package TorrentRMI;
 
+import TorrentRMI.GUIs.PopUp;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -31,7 +32,7 @@ public class Cliente  extends UnicastRemoteObject implements InterfaceCli{
     
     @Override
     public void notificarEvento(String str) throws RemoteException {
-        System.out.println(str);    
+        PopUp popup = new PopUp(str);
     }
     public ArrayList<String> getListaArquivos() throws RemoteException{
         return this.refServer.consultarArquivos(this);
