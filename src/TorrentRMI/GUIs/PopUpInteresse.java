@@ -21,13 +21,11 @@ public class PopUpInteresse extends javax.swing.JFrame {
     private String download;
     private InterfaceCli cliente;
     private InterfaceServ servidor;
-    private ArrayList<String> registros;
     
-    public PopUpInteresse(String download, InterfaceCli cliente, InterfaceServ servidor, ArrayList<String> registros) {
+    public PopUpInteresse(String download, InterfaceCli cliente, InterfaceServ servidor) {
         this.download = download;
         this.cliente = cliente;
         this.servidor = servidor;
-        this.registros = registros;
         initComponents();
         this.mensagem.setText("Deseja registrar o interesse para o arquivo: "+download+"?");
         this.setVisible(true);
@@ -45,6 +43,8 @@ public class PopUpInteresse extends javax.swing.JFrame {
         Cancelar = new javax.swing.JButton();
         mensagem = new javax.swing.JLabel();
         sim = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        tempo = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,6 +74,15 @@ public class PopUpInteresse extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Tempo");
+
+        tempo.setText("00");
+        tempo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tempoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -82,7 +91,10 @@ public class PopUpInteresse extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 137, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tempo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                         .addComponent(Cancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sim))
@@ -97,8 +109,11 @@ public class PopUpInteresse extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(mensagem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Cancelar)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Cancelar)
+                        .addComponent(jLabel1)
+                        .addComponent(tempo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(sim))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -133,18 +148,24 @@ public class PopUpInteresse extends javax.swing.JFrame {
 
     private void simMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_simMouseClicked
         try {
-            servidor.registrarInteresse(download, cliente);
-            registros.add(download);
+            
+            servidor.registrarInteresse(download, cliente, Long.parseLong(this.tempo.getText()));
             this.setVisible(false);
         } catch (RemoteException ex) {
             Logger.getLogger(PopUpInteresse.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_simMouseClicked
 
+    private void tempoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tempoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cancelar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel mensagem;
     private javax.swing.JButton sim;
+    private javax.swing.JTextField tempo;
     // End of variables declaration//GEN-END:variables
 }

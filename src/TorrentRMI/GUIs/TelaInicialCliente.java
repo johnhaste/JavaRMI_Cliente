@@ -75,11 +75,18 @@ public class TelaInicialCliente extends javax.swing.JFrame {
 
     private void atualizaListaInteresses() {
         DefaultListModel listModel = new DefaultListModel();
-        for (String a : this.listaDeInteresses) {
-            listModel.addElement(a);
+        try {
+            ArrayList<String> interesses = servidor.getMeusInteresses(cliente);
+            for (String a : interesses) {
+                listModel.addElement(a);
+            }
+            this.listaDeInteressesPainel.removeAll();
+            this.listaDeInteressesPainel.setModel(listModel);
+            
+        } catch (RemoteException ex) {
+            Logger.getLogger(TelaInicialCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.listaDeInteressesPainel.removeAll();
-        this.listaDeInteressesPainel.setModel(listModel);
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -335,17 +342,17 @@ public class TelaInicialCliente extends javax.swing.JFrame {
                 for(int i=0 ; i<10000000 ; i++){}
                 if(arq == null)
                 {
-                    PopUpInteresse regInteresse = new PopUpInteresse(download, cliente, servidor, listaDeInteresses);                        
+                    PopUpInteresse regInteresse = new PopUpInteresse(download, cliente, servidor);
+                    this.atualizaListaInteresses();
                 }
                 else{
                     FileOutputStream fileOS = new FileOutputStream(file.getName()+"\\"+download);
                     fileOS.write(arq);
                     fileOS.close();
                     this.atualizaListaCliente();
-                    if(listaDeInteresses.contains(download)){
-                        listaDeInteresses.remove(download);
-                        atualizaListaInteresses();
+                    if(servidor.getMeusInteresses(cliente).contains(download)){
                         servidor.cancelarInteresse(download, cliente);
+                        atualizaListaInteresses();
                     }
                 }
             } catch (RemoteException ex) {
@@ -372,7 +379,6 @@ public class TelaInicialCliente extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(TelaInicialCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
-        listaDeInteresses.remove(listaDeInteressesPainel.getSelectedValue());
         atualizaListaInteresses();
     }//GEN-LAST:event_removerInteresseButtonMouseClicked
 
